@@ -1,0 +1,8 @@
+build/bin
+node_modules
+frontend/dist
+/my-go-launcher
+/my-go-launcher.exe
+_demo/
+frontend/package.json.md5
+build/windows/installer/tmp/

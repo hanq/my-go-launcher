@@ -1,0 +1,385 @@
+/* ─────────────────────────────────────────────────────────────
+   基因：赛博霓虹（agent-taste-seed-system · code-genes/02）
+   纪律：荧光青只给边/线/数字（≤15%），品红仅告警，
+         正文永不用荧光色，紫渐变零容忍，圆角 6px 锐利系。
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --bg: #0a0e1a;
+  --bg-deep: #070a13;
+  --surface: #131b2e;
+  --surface-2: #172036;
+  --surface-3: #1c2740;
+  --text: #c9d1d9;
+  --text-dim: #93a1b8;
+  --text-faint: #7d8ba3;
+  --accent: #38f2c8;
+  --accent-soft: rgba(56, 242, 200, 0.14);
+  --danger: #ff2d78;
+  --danger-soft: rgba(255, 45, 120, 0.14);
+  --warn: #ffb02d;
+  --radius: 6px;
+  --radius-sm: 4px;
+  --line: rgba(56, 242, 200, 0.25);
+  --line-faint: rgba(56, 242, 200, 0.12);
+  --glow: 0 0 12px rgba(56, 242, 200, 0.35);
+  --glow-strong: 0 0 18px rgba(56, 242, 200, 0.5);
+  --danger-glow: 0 0 12px rgba(255, 45, 120, 0.4);
+  --mono: 'JetBrains Mono', 'Cascadia Code', 'SF Mono', Consolas, 'Courier New', monospace;
+  --sans: 'Inter', 'Segoe UI', system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+  /* 5% 细网格纹理制造纵深 */
+  background-image:
+    linear-gradient(rgba(56, 242, 200, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 242, 200, 0.05) 1px, transparent 1px),
+    radial-gradient(1100px 620px at 76% 18%, rgba(56, 242, 200, 0.09), transparent 68%);
+  background-size: 56px 56px, 56px 56px, 100% 100%;
+  background-attachment: fixed;
+}
+
+::selection {
+  background: rgba(56, 242, 200, 0.3);
+}
+
+/* ── 滚动条 ── */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: 4px;
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 242, 200, 0.35);
+}
+
+/* ── 拖拽区 ── */
+.drag {
+  --wails-draggable: drag;
+}
+.no-drag {
+  --wails-draggable: no-drag;
+}
+
+/* ── 通用面板 ── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line-faint);
+  border-radius: var(--radius);
+  position: relative;
+}
+.panel-accent::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: var(--accent);
+  box-shadow: var(--glow);
+  opacity: 0.6;
+}
+
+/* ── 按钮 ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--line-faint);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  user-select: none;
+}
+.btn:hover {
+  border-color: var(--line);
+  color: #eef3f7;
+  box-shadow: 0 0 10px rgba(56, 242, 200, 0.18);
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.btn-primary {
+  color: #04231b;
+  background: var(--accent);
+  border-color: var(--accent);
+  font-weight: 700;
+  text-shadow: none;
+}
+.btn-primary:hover {
+  color: #04231b;
+  box-shadow: var(--glow-strong);
+}
+.btn-danger {
+  color: var(--danger);
+  border-color: rgba(255, 45, 120, 0.35);
+}
+.btn-danger:hover {
+  color: #fff;
+  background: var(--danger);
+  border-color: var(--danger);
+  box-shadow: var(--danger-glow);
+}
+.btn-ghost {
+  background: transparent;
+}
+.btn-sm {
+  height: 22px;
+  padding: 0 8px;
+  font-size: 10.5px;
+}
+.btn-icon {
+  width: 28px;
+  padding: 0;
+  justify-content: center;
+}
+
+/* ── 输入框 ── */
+.input {
+  height: 28px;
+  padding: 0 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+  background: var(--bg-deep);
+  border: 1px solid var(--line-faint);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(56, 242, 200, 0.35), 0 0 10px rgba(56, 242, 200, 0.15);
+}
+.input::placeholder {
+  color: var(--text-faint);
+}
+textarea.input {
+  height: auto;
+  padding: 8px 10px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* ── 状态点 ── */
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-faint);
+  flex-shrink: 0;
+}
+.dot.running {
+  background: var(--accent);
+  box-shadow: var(--glow);
+  animation: breathe 2s ease-in-out infinite;
+}
+.dot.starting,
+.dot.building,
+.dot.stopping {
+  background: var(--warn);
+  box-shadow: 0 0 8px rgba(255, 176, 45, 0.6);
+  animation: breathe 1s ease-in-out infinite;
+}
+.dot.error {
+  background: var(--danger);
+  box-shadow: var(--danger-glow);
+}
+.dot.exited {
+  background: var(--text-faint);
+}
+.dot.killed {
+  background: var(--danger);
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ── 徽章 ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 1px solid var(--line-faint);
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+.badge.run {
+  color: var(--accent);
+  border-color: rgba(56, 242, 200, 0.35);
+}
+.badge.build {
+  color: var(--warn);
+  border-color: rgba(255, 176, 45, 0.35);
+}
+
+/* ── 标签 ── */
+.tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 6px;
+}
+
+/* ── 键值编辑器 ── */
+.kv-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 28px;
+  gap: 6px;
+  align-items: center;
+}
+.kv-row + .kv-row {
+  margin-top: 6px;
+}
+
+/* ── 路径文本 ── */
+.path {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text-dim);
+  word-break: break-all;
+  cursor: pointer;
+}
+.path:hover {
+  color: var(--accent);
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+/* ── 空态 ── */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 100%;
+  color: var(--text-faint);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding: 32px;
+}
+.empty .glyph {
+  font-size: 34px;
+  color: var(--line);
+}
+
+/* ── 错误条 ── */
+.errorbar {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 999;
+  background: var(--surface-3);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius);
+  box-shadow: var(--danger-glow);
+  color: #ffd7e6;
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 10px 16px;
+  max-width: 60vw;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.errorbar .close {
+  cursor: pointer;
+  color: var(--danger);
+  font-size: 14px;
+}
+
+/* ── 分隔线 ── */
+.hr {
+  height: 1px;
+  background: var(--line-faint);
+  margin: 10px 0;
+}
+
+/* ── 通用工具类 ── */
+.flex {
+  display: flex;
+  align-items: center;
+}
+.gap6 {
+  gap: 6px;
+}
+.gap10 {
+  gap: 10px;
+}
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.section-title {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
