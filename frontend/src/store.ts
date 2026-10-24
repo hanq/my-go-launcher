@@ -42,6 +42,8 @@ interface State {
   shellFavorites: string[]
   /** 工作区各指令的 git 分支（key: commandId；非 git 仓库为空串） */
   gitBranches: Record<string, string>
+  /** 待交互终端回显并执行的指令（面板外入口：Git 管理按钮等） */
+  pendingEcho: { commandId: string; line: string } | null
   loading: boolean
   scanningWorkspaces: Record<string, boolean>
   error: string
@@ -66,6 +68,7 @@ export const store = reactive<State>({
   shellHistory: [],
   shellFavorites: [],
   gitBranches: {},
+  pendingEcho: null,
   loading: false,
   scanningWorkspaces: {},
   error: '',
@@ -495,6 +498,11 @@ export async function runShellLine(commandId: string, line: string): Promise<boo
     const hist = await api.RunShellLine(commandId, line)
     if (store.selectedWorkspaceId === found.ws.id) store.shellHistory = hist ?? []
   })
+}
+
+/** 请求交互终端回显并执行一条指令（终端面板监听处理；供 Git 管理等面板外入口使用） */
+export function queueEchoRun(commandId: string, line: string): void {
+  store.pendingEcho = { commandId, line }
 }
 
 /** 获取会话输出回放缓冲（重新挂载时一次性回放） */

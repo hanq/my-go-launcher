@@ -8,8 +8,8 @@ import { confirmDialog } from '../dialog'
 import {
   deleteCommand,
   openShellSession,
+  queueEchoRun,
   revealPath,
-  runShellLine,
   selectedCommand,
   selectedWorkspace,
   store,
@@ -111,7 +111,7 @@ async function execGit(gitCmd: string): Promise<void> {
       await switchShellDir(c.id, root)
     }
     store.centerTab = 'shell'
-    await runShellLine(c.id, gitCmd)
+    queueEchoRun(c.id, gitCmd)
   } finally {
     gitBusy.value = false
   }
@@ -585,11 +585,12 @@ async function remove(): Promise<void> {
 }
 .git-actions {
   display: flex;
+  flex-direction: column;
   gap: 6px;
   margin-top: 6px;
 }
 .git-btn {
-  flex: 1;
+  width: 100%;
   justify-content: center;
 }
 .git-hint {

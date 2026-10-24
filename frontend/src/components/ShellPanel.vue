@@ -532,6 +532,18 @@ watch(
   },
 )
 
+// 面板外入口（Git 管理按钮等）请求回显并执行指令
+watch(
+  () => store.pendingEcho,
+  (pe) => {
+    if (!pe) return
+    const target = pe.commandId
+    store.pendingEcho = null
+    if (target !== store.selectedCommandId || !session.value) return
+    void submitLine(pe.line)
+  },
+)
+
 onMounted(() => {
   setup()
   eventsOn('shell:out', onShellOut)
