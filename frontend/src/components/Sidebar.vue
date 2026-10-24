@@ -2,9 +2,8 @@
 import { ref, watch } from 'vue'
 import Icon from './Icon.vue'
 import {
+  deleteCommand,
   deleteWorkspace,
-  killCommand,
-  openShellForCommand,
   reorderCommands,
   restartCommand,
   scanWorkspace,
@@ -67,6 +66,18 @@ async function onStart(cmd: LaunchCommand): Promise<void> {
 async function onRestart(cmd: LaunchCommand): Promise<void> {
   selectCommand(cmd.id)
   await restartCommand(cmd.workspaceId, cmd.id, cmd.mode || 'run')
+}
+
+/** 删除当前指令（二次确认；运行中的进程会先被强停，后端同时关闭其终端会话） */
+async function onDeleteCommand(cmd: LaunchCommand): Promise<void> {
+  const ok = await confirmDialog({
+    title: `删除指令 · ${cmd.name}`,
+    message: '删除后该指令的启动配置（环境变量、参数）将被移除；运行中的进程会先被强制停止。',
+    danger: true,
+    confirmText: '删除',
+  })
+  if (!ok) return
+  await deleteCommand(cmd.workspaceId, cmd.id)
 }
 
 async function onKillProcesses(cmd: LaunchCommand): Promise<void> {
@@ -267,16 +278,9 @@ function onDragEnd(): void {
                 <div class="cmd-path ellipsis mono">{{ cmd.mainFile }}</div>
               </div>
               <div class="cmd-actions" @click.stop>
-                <button
-                  class="mini"
-                  title="打开终端会话（在模块目录执行命令）"
-                  @click="openShellForCommand(cmd.id)"
-                >
-                  <Icon name="terminal" :size="11" />
-                </button>
                 <template v-if="isRunning(cmd)">
-                  <button class="mini danger" title="强杀进程" @click="killCommand(ws.id, cmd.id)">
-                    <Icon name="kill" :size="11" />
+                  <button class="mini danger" title="删除指令（需二次确认）" @click="onDeleteCommand(cmd)">
+                    <Icon name="trash" :size="11" />
                   </button>
                   <button class="mini" title="优雅关闭" @click="stopCommand(ws.id, cmd.id)">
                     <Icon name="stop" :size="11" />
